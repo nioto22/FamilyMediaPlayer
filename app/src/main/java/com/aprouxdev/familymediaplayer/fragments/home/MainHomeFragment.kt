@@ -11,18 +11,21 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.media3.common.util.UnstableApi
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.aprouxdev.familymediaplayer.MainActivity
+import com.aprouxdev.familymediaplayer.adapters.HomeMediaAdapter
+import com.aprouxdev.familymediaplayer.adapters.HomeMediaListener
 import com.aprouxdev.familymediaplayer.databinding.FragmentMainHomeBinding
+import com.aprouxdev.familymediaplayer.objects.MyMedia
 import com.aprouxdev.familymediaplayer.viewmodels.MainViewModel
-import com.aprouxdev.familymediaplayer.viewmodels.MainViewModel.MediaUploadState
 import com.aprouxdev.familymediaplayer.viewmodels.MainViewModel.MediaUploadState.Error
 import com.aprouxdev.familymediaplayer.viewmodels.MainViewModel.MediaUploadState.Loading
 import com.aprouxdev.familymediaplayer.viewmodels.MainViewModel.MediaUploadState.UploadComplete
-import com.aprouxdev.familymediaplayer.viewmodels.MyMedia
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 
-class MainHomeFragment : Fragment() {
+@UnstableApi class MainHomeFragment : Fragment(), HomeMediaListener {
 
     companion object {
         fun newInstance(): MainHomeFragment {
@@ -55,6 +58,7 @@ class MainHomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        context?.let { mViewModel.getAllMedias(it) }
         setupDataObservers()
         setupUiViews()
         setupUiListeners()
@@ -78,7 +82,7 @@ class MainHomeFragment : Fragment() {
                             is Error -> showError(mediaState.message)
                             Loading -> Unit
                             is UploadComplete -> {
-                                val mMediaList = mediaState.medias
+                                mMediaList = mediaState.medias
                                 setupRecyclerView()
                             }
                         }
@@ -106,14 +110,25 @@ class MainHomeFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-
+        if (this::mAdapter.isInitialized) {
+            mAdapter.updateData(mMediaList)
+        } else {
+            with(binding.homeMediaRecyclerView) {
+                layoutManager = LinearLayoutManager(context)
+                mAdapter = HomeMediaAdapter(mMediaList, this@MainHomeFragment)
+                adapter = mAdapter
+            }
+        }
     }
     //endregion
 
     //region UI LISTENERS AND CLICKS
     private fun setupUiListeners() {
 
+    }
 
+    override fun onMyMediaClicked(item: MyMedia) {
+        (activity as? MainActivity)?.showMediaPlayer(item)
     }
     //endregion
 }

@@ -1,9 +1,13 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.FamilyMediaPlayer" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <style name="FamilyMediaPlayerTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/prune_50</item>
+        <item name="colorSecondary">@color/yellow_400</item>
+        <item name="android:windowBackground">@color/prune_50</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <!-- Disable Built In Splash screen -->
+        <item name="android:windowIsTranslucent">true</item>
     </style>
-
-    <style name="Theme.FamilyMediaPlayer" parent="Base.Theme.FamilyMediaPlayer" />
 </resources>

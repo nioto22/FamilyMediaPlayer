@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">FamilyMediaPlayer</string>
+    <string name="home_title">Toutes les vidéos de tes proches au même endroit</string>
+    <string name="home_error_no_media">Aucune vidéo trouvée désolé !!</string>
 </resources>

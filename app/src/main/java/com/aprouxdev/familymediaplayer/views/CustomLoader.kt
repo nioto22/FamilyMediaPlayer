@@ -13,7 +13,7 @@ class CustomLoader @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
 ) : RelativeLayout(context, attrs) {
 
-    private lateinit var binding: ViewVinylLoaderBinding
+    private val binding: ViewVinylLoaderBinding
 
     init {
         binding = ViewVinylLoaderBinding.inflate(LayoutInflater.from(context), this, true)
