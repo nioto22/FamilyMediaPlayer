@@ -8,6 +8,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.Player.Listener
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.LoadControl
 import androidx.recyclerview.widget.RecyclerView
 import com.aprouxdev.familymediaplayer.R
 import com.aprouxdev.familymediaplayer.databinding.ViewItemHomeMediaBinding
@@ -65,7 +66,8 @@ class HomeMediaAdapter(
         }
 
         private fun setupMediaPlayer(context: Context, mediaUrl: String) {
-            val player = ExoPlayer.Builder(context).build()
+            val player = ExoPlayer.Builder(context)
+                .build()
             binding.homeItemPlayerView.player = player
 
             val mediaItem = MediaItem.fromUri(mediaUrl)
@@ -83,7 +85,6 @@ class HomeMediaAdapter(
 
                 override fun onRenderedFirstFrame() {
                     super.onRenderedFirstFrame()
-
                 }
             })
         }

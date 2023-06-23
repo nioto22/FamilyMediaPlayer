@@ -4,9 +4,13 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.media3.common.util.UnstableApi
+import androidx.work.ExistingWorkPolicy
+import androidx.work.WorkManager
 import com.aprouxdev.familymediaplayer.R
 import com.aprouxdev.familymediaplayer.objects.MediaCategory
 import com.aprouxdev.familymediaplayer.objects.MyMedia
+import com.aprouxdev.familymediaplayer.service.VideoPreloadWorker
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 import kotlinx.coroutines.delay
@@ -17,7 +21,7 @@ import java.io.IOException
 import java.io.InputStreamReader
 
 
-class MainViewModel: ViewModel() {
+@UnstableApi class MainViewModel: ViewModel() {
 
     sealed class MediaUploadState {
         object Loading : MediaUploadState()
@@ -54,6 +58,7 @@ class MainViewModel: ViewModel() {
 //                    MyMedia("https://www.youtube.com/watch?v=aMZ4QL0orw0", "2023-06-16", "Ibeyi", "Away Away"),
 //                    )
                 val medias = loadMediaFromAssetsExample(context)
+                //preloadAllMedias(context, medias)
 
                 // Emit the mock data
                 medias?.let {
@@ -66,6 +71,25 @@ class MainViewModel: ViewModel() {
                 _mediaUploadState.emit(MediaUploadState.Error(message = context.getString(R.string.home_error_no_media)))
             }
         }
+    }
+
+    private fun preloadAllMedias(context: Context, medias: List<MyMedia>?) {
+        medias?.forEach {
+            schedulePreloadWork(context, it.mediaUrl)
+        }
+    }
+
+    /**
+     * Schedule the preloading work
+     */
+    private fun schedulePreloadWork(context: Context, mediaUrl: String) {
+        val workManager = WorkManager.getInstance(context)
+        val videoPreloadWorker = VideoPreloadWorker.buildWorkRequest(mediaUrl)
+        workManager.enqueueUniqueWork(
+            "VideoPreloadWorker",
+            ExistingWorkPolicy.KEEP,
+            videoPreloadWorker
+        )
     }
 
     private fun loadMediaFromAssetsExample(context: Context): List<MyMedia>? {

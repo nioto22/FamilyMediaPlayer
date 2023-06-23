@@ -53,12 +53,13 @@ import kotlinx.coroutines.launch
     ): View {
         _binding = FragmentMainHomeBinding.inflate(inflater, container, false)
         mViewModel = ViewModelProvider(this)[MainViewModel::class.java]
+        context?.let { mViewModel.getAllMedias(it) }
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        context?.let { mViewModel.getAllMedias(it) }
+
         setupDataObservers()
         setupUiViews()
         setupUiListeners()

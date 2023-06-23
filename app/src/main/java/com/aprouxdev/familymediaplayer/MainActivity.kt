@@ -87,7 +87,7 @@ import com.aprouxdev.familymediaplayer.objects.MyMedia
 
             override fun onRenderedFirstFrame() {
                 super.onRenderedFirstFrame()
-                // TODO
+
             }
         })
     }
